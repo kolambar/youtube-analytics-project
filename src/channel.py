@@ -8,26 +8,50 @@ api_key: str = os.getenv('API_KEY')
 class Channel:
     """Класс для ютуб-канала"""
 
+    youtube = build('youtube', 'v3', developerKey=api_key)
+
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
-        self.channel_id = channel_id
-        youtube = build('youtube', 'v3', developerKey=api_key)
-        self.response = youtube.channels().list(
+        self.__channel_id = channel_id # делаем id полем класса
+
+        # поле со всей информацией о канале в виде большого словаря
+        self.response = self.youtube.channels().list(
             part='snippet,contentDetails,statistics',
             id=channel_id
         ).execute()
 
-        # Обработка полученного ответа
-        self.channel = self.response['items'][0]
-        self.snippet = self.channel['snippet']
-        self.statistics = self.channel['statistics']
+        # Обработка полученного ответа на нужные словари
+        channel = self.response['items'][0]
+        snippet = channel['snippet']
+        statistics = channel['statistics']
 
-
+        # создание нужных нам полей с информацией
+        self.title = snippet['title'] # название канала
+        self.description = snippet['description'] # описание канала
+        self.subscribers = statistics['subscriberCount'] # количество подписчиков
+        self.video_count = statistics['videoCount'] # количество видео
+        self.view_count = statistics['viewCount'] # количество просмотров
+        self.url = 'https://www.youtube.com/channel/' + self.__channel_id # ссылка на канал
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        # Формирование нужного формата данных
-
-
-        # Вывод результатов
         print(json.dumps(self.response, indent=4, ensure_ascii=False))
+
+    @classmethod
+    def get_service(cls):
+        '''
+        возвращающий объект для работы с YouTube API
+        '''
+        return cls.youtube
+
+    def to_json(self, file_name):
+        '''
+        сохраняет в файл значения атрибутов экземпляра `Channel`.
+        есть больлшое поле response оно нужно в методе, но содержет много второстепенной информации. можно пропускать
+        '''
+        fields = vars(self)
+        instance_info = {}
+        for fild_name, fild_value in fields.items():
+            instance_info[fild_name] = fild_value
+        with open(file_name, "w", encoding='utf-8') as write_file:
+            json.dump(instance_info, write_file, separators=(',', ': '), indent=4, ensure_ascii=False)
