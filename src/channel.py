@@ -28,10 +28,31 @@ class Channel:
         # создание нужных нам полей с информацией
         self.title = snippet['title'] # название канала
         self.description = snippet['description'] # описание канала
-        self.subscribers = statistics['subscriberCount'] # количество подписчиков
-        self.video_count = statistics['videoCount'] # количество видео
-        self.view_count = statistics['viewCount'] # количество просмотров
+        self.subscribers = int(statistics['subscriberCount']) # количество подписчиков
+        self.video_count = int(statistics['videoCount']) # количество видео
+        self.view_count = int(statistics['viewCount']) # количество просмотров
         self.url = 'https://www.youtube.com/channel/' + self.__channel_id # ссылка на канал
+
+    def __str__(self):
+        return f'{self.title} ({self.url})'
+
+    def __add__(self, other):
+        return self.subscribers + other.subscribers
+
+    def __sub__(self, other):
+        return self.subscribers - other.subscribers
+
+    def __lt__(self, other):
+        return self.subscribers < other.subscribers
+
+    def __le__(self, other):
+        return self.subscribers <= other.subscribers
+
+    def __gt__(self, other):
+        return self.subscribers > other.subscribers
+
+    def __ge__(self, other):
+        return self.subscribers >= other.subscribers
 
     @property
     def channel_id(self):
