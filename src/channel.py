@@ -33,6 +33,10 @@ class Channel:
         self.view_count = statistics['viewCount'] # количество просмотров
         self.url = 'https://www.youtube.com/channel/' + self.__channel_id # ссылка на канал
 
+    @property
+    def channel_id(self):
+        return self.__channel_id
+
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         print(json.dumps(self.response, indent=4, ensure_ascii=False))
