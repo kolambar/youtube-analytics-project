@@ -37,12 +37,22 @@ class Channel:
         return f'{self.title} ({self.url})'
 
     def __add__(self, other):
+        '''
+        сложение подписчиков
+        :param other:
+        :return:
+        '''
         return self.subscribers + other.subscribers
 
     def __sub__(self, other):
         return self.subscribers - other.subscribers
 
     def __lt__(self, other):
+        '''
+        сравнение количества подписчиков
+        :param other:
+        :return:
+        '''
         return self.subscribers < other.subscribers
 
     def __le__(self, other):

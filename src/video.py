@@ -1,6 +1,5 @@
 from googleapiclient.discovery import build
 import os
-import json
 
 
 api_key: str = os.getenv('API_KEY')
