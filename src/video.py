@@ -21,15 +21,22 @@ class Video:
         ).execute()
 
         # Обработка полученного ответа на нужные словари
-        video = response['items'][0]
-        snippet = video['snippet']
-        statistics = video['statistics']
+        try:
+            video = response['items'][0]
+        except IndexError:
+            self.title = None
+            self.like_count = None
+            self.view_count = None
+            self.url = None
+        else:
+            snippet = video['snippet']
+            statistics = video['statistics']
 
-        # создание нужных нам полей с информацией
-        self.title = snippet['title'] # название видео
-        self.video_count = int(statistics['likeCount']) # количество лайков
-        self.view_count = int(statistics['viewCount']) # количество просмотров
-        self.url = 'https://www.youtube.com/watch?v=' + self.__video_id # ссылка на видео
+            # создание нужных нам полей с информацией
+            self.title = snippet['title'] # название видео
+            self.like_count = int(statistics['likeCount']) # количество лайков
+            self.view_count = int(statistics['viewCount']) # количество просмотров
+            self.url = 'https://www.youtube.com/watch?v=' + self.__video_id # ссылка на видео
 
     def __repr__(self):
         return f'id {self.__video_id}/название {self.title}/количество лайков {self.video_count}/количество просмотров {self.view_count}/ссылка {self.url}'
